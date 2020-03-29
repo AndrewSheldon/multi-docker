@@ -14,7 +14,7 @@ after_success:
     - docker build -t provardis2020/multi-server ./server
     - docker build -t provardis2020/multi-worker ./worker
     # Log in to the Docker CLI
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_ID" --password-stdin
     # Take those images and push to docker hub
     - docker push provardis2020/multi-client
     - docker push provardis2020/multi-nginx
