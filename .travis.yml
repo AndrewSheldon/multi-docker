@@ -1,0 +1,25 @@
+language: generic
+
+sudo: required
+
+services:
+    - docker
+
+before_install:
+    - docker build -t provardis2020/react-test -f ./client/Dockerfile.dev ./client 
+
+script:
+    - docker run -e CI=true provardis2020/react-test npm test
+
+after_success:
+    - docker build -t provardis2020/multi-client ./client
+    - docker build -t provardis2020/multi-nginx ./nginx
+    - docker build -t provardis2020/multi-server ./server
+    - docker build -t provardis2020/multi-worker ./worker
+    # Log in to the Docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Take those images and push to docker hub
+    - docker push provardis2020/multi-client
+    - docker push provardis2020/multi-nginx
+    - docker push provardis2020/multi-server
+    - docker push provardis2020/multi-worker
